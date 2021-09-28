@@ -33,4 +33,14 @@
   };
   printName("Steve", `jobs`);
   printName("guiwoo");
+
+  // Default parameter
+  const printMessage = (message: string = "I am default") =>
+    console.log(message);
+  printMessage();
+
+  // Rest parameter
+  const addMulti = (...numbers: number[]): number => {
+    return numbers.reduce((prev, curr) => prev + curr);
+  };
 }
