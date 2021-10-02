@@ -11,17 +11,11 @@
     makeCoffee(shots: number): CoffeeCup;
   }
 
-  interface CommercialCoffeeMaker {
-    makeCoffee(shots: number): CoffeeCup;
-    fillCoffeeBeans(beans: number): void;
-    clean(): void;
-  }
-
-  class CoffeeMachine implements CoffeeMaker, CommercialCoffeeMaker {
+  class CoffeeMachine implements CoffeeMaker {
     private static BEANS_GRAM_PER_SHOT: number = 7; // class level
     private coffeeBeansGram: number = 0; // instance
 
-    private constructor(coffeeBeans: number) {
+    public constructor(coffeeBeans: number) {
       this.coffeeBeansGram = coffeeBeans;
     }
 
@@ -57,32 +51,33 @@
       };
     };
 
-    makeCoffee = (shots: number): CoffeeCup => {
+    makeCoffee(shots: number): CoffeeCup {
       this.grindBeans(shots);
       this.preheat();
       return this.extract(shots);
-    };
-  }
-
-  class AmaterUser {
-    constructor(private machine: CoffeeMaker) {}
-    makeCoffee() {
-      const coffee = this.machine.makeCoffee(2);
-      console.log(coffee);
-    }
-  }
-  class ProBarista {
-    constructor(private machine: CommercialCoffeeMaker) {}
-    makeCoffee() {
-      const coffee = this.machine.makeCoffee(2);
-      console.log(coffee);
-      this.machine.fillCoffeeBeans(45);
-      this.machine.clean();
     }
   }
 
-  const maker: CoffeeMachine = CoffeeMachine.makeMachine(20);
-  const amateur = new AmaterUser(maker);
-  const pro = new ProBarista(maker);
-  pro.makeCoffee();
+  class CaffeeLatteMachine extends CoffeeMachine {
+    constructor(beans: number, serialNumber: string) {
+      super(beans);
+    }
+    private steamMilk(): void {
+      console.log("steaming some milk...");
+    }
+
+    makeCoffee(shots: number): CoffeeCup {
+      const coffee = super.makeCoffee(shots);
+      this.steamMilk();
+      return {
+        ...coffee,
+        hasMilk: true,
+      };
+    }
+  }
+
+  const machine = new CoffeeMachine(23);
+  const latteMachine = new CaffeeLatteMachine(23, "AAAA123321");
+  const coffee = latteMachine.makeCoffee(1);
+  console.log(coffee);
 }
