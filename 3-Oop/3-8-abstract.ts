@@ -40,7 +40,7 @@
 
     private preheat = (): void => console.log("Heating up.....");
 
-    protected abstract extract(shots: number): CoffeeCup {}
+    protected abstract extract(shots: number): CoffeeCup;
 
     makeCoffee(shots: number): CoffeeCup {
       this.grindBeans(shots);
@@ -57,11 +57,10 @@
       console.log("steaming some milk...");
     }
 
-    makeCoffee(shots: number): CoffeeCup {
-      const coffee = super.makeCoffee(shots);
+    protected extract(shots: number): CoffeeCup {
       this.steamMilk();
       return {
-        ...coffee,
+        shots,
         hasMilk: true,
       };
     }
@@ -71,7 +70,7 @@
     private addSugar() {
       console.log("Adding Sugar");
     }
-    makeCoffee(shots: number): CoffeeCup {
+    protected extract(shots: number): CoffeeCup {
       this.addSugar();
       return {
         shots,
@@ -81,7 +80,6 @@
   }
 
   const machines: CoffeeMaker[] = [
-    new CoffeeMachine(16),
     new CaffeeLatteMachine(16, "Guiwoo1212"),
     new SweetCoffeeMaker(16),
   ];
